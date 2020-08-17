@@ -9,9 +9,12 @@ This script uses ``/opt/CA/WorkloadAutomation/bin/cli`` binary to query CA Workl
 This plugin should be placed in ``/usr/lib/check_mk_agent/local/60/``, so this check works async with check_mk_agent avoiding timeouts if it last. The name of the folder (60) indicates frecuency in seconds in witch plugin would be executed. Name this folder as you need. More apps you check, longer time expend on checking.
 
 Custom apps to check. You can check available apps with command:
-    sh /opt/CA/WorkloadAutomation/bin/cli hostname puerto usuario password 'listevent' | grep "Application name" | awk '{print $3}'`)
+```
+sh /opt/CA/WorkloadAutomation/bin/cli hostname puerto usuario password 'listevent' | grep "Application name" | awk '{print $3}'`)
+```
 
 Give it execution permissions:
-    chmod +x check_mk_cawa
-
+```
+chmod +x check_mk_cawa
+```
 
