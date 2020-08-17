@@ -21,5 +21,5 @@ You cant check if plugin works:
 ![Chequeo del plugin](https://github.com/martinmartossimon/check_mk_cawa/blob/master/images/check_output.png)
 
 After doing discovery, you could check the services:
-![Servicios]()
-![Graficas]()
+![Servicios](https://github.com/martinmartossimon/check_mk_cawa/blob/master/images/check_mk_plugin_view.png)
+![Graficas](https://github.com/martinmartossimon/check_mk_cawa/blob/master/images/check_cawa_grafica.png)
