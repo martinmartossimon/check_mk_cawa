@@ -1,0 +1,61 @@
+#!/bin/bash
+#################################################################################################################
+# Copyright (C) 2020  Martin Martos Simon
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# -----------------
+# Titulo: Chequeo de Malla CA Workload Automation v
+#
+# Descripcion: Chequeo del estado de ejecucion de una malla de CAWA
+#
+# Detalle:
+# COMANDO COLECTOR: 
+# sh /opt/CA/WorkloadAutomation/bin/cli hostname puerto usuario password 'listapplication application('NombreApp') summary(true)')
+#
+# COMANDO QUE CONSULTA LAS MALLAS O APP:
+# sh /opt/CA/WorkloadAutomation/bin/cli hostname puerto usuario password 'listevent' | grep "Application name" | awk '{print $3}'`)
+#
+# Autor: Martin Martos Simon - martinmartossimon@gmail.com
+#################################################################################################################
+########################## DEBUG
+#set -x
+
+
+########################## PARAMETRIZACION
+NOMBRES_MALLAS="APP_NAME1 APP_NAME2 APP_NAME3" #you can set as many apps as you wish. Remember, more apps, more time checking.
+PATH_EJECUTABLE="/opt/CA/WorkloadAutomation/bin/cli" #path to cli CAWA binary
+USUARIO="cawauser" #user in CAWA 
+PASSWD="cawapass" #password
+HOST="cawaHostnameServer" #CAWA Server hostname / IP
+PUERTO=7500 #Default port
+
+
+########################## MAIN
+for nombre_app in $NOMBRES_MALLAS
+do
+	SALIDA="$(sh $PATH_EJECUTABLE $HOST $PUERTO $USUARIO $PASSWD 'listapplication application('${nombre_app}') summary(true)')"
+	CODIGO_SALIDA=$?
+	ESTADO=$(echo "${SALIDA}" | grep "Application state" | awk '{print $3}')
+	PROGRESO=$(echo "${SALIDA}" | grep "Completion percentage" | awk '{printf "%.2f",$3}')
+	if [[ $CODIGO_SALIDA -eq 0 ]]; then
+		if [[ $ESTADO == "TROUBLE" ]]; then
+			echo "2 CAWA_$nombre_app progreso=$PROGRESO; El estado de la malla CAWA $nombre_app es: $ESTADO. Progreso=$PROGRESO. Escalar con... texto customizable"
+		else
+			if [[ -z $ESTADO ]]; then
+				ESTADO="Inactiva"
+				PROGRESO=-1
+			fi
+			echo "0 CAWA_$nombre_app progreso=$PROGRESO; El estado de la malla CAWA $nombre_app es: $ESTADO. Progreso=$PROGRESO"
+		fi
+	else
+		echo "2 CAWA_$nombre_app progreso=$PROGRESO; Error en la ejecucion del comando que chequea la malla -> sh $PATH_EJECUTABLE $HOST $PUERTO $USUARIO $PASSWD 'listapplication application('${nombre_app}') summary(true)' Escalar con... texto customizable"
+	fi
+done
