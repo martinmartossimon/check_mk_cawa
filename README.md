@@ -17,4 +17,5 @@ Give it execution permissions:
 ```
 chmod +x check_mk_cawa
 ```
-
+You cant check if plugin works:
+![Chequeo del plugin](https://github.com/martinmartossimon/check_mk_cawa/blob/master/images/check_output.png)
