@@ -1,5 +1,5 @@
 # check_mk_cawa
-check_mk plugin witch collects CA Workload Automation Application(s) progress and alert on trouble.
+check_mk plugin witch collects [CA Workload Automation](https://en.wikipedia.org/wiki/CA_Workload_Automation_AE) application(s) progress and alert on status trouble.
 
 
 # Dependencies:
