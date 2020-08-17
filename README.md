@@ -23,3 +23,4 @@ You cant check if plugin works:
 After doing discovery, you could check the services:
 ![Servicios](https://github.com/martinmartossimon/check_mk_cawa/blob/master/images/check_mk_plugin_view.png)
 ![Graficas](https://github.com/martinmartossimon/check_mk_cawa/blob/master/images/check_cawa_grafica.png)
+**progreso=-1 indicates Inactive App**
