@@ -37,6 +37,8 @@ PASSWD="cawapass" #password
 HOST="cawaHostnameServer" #CAWA Server hostname / IP
 PUERTO=7500 #Default port
 
+TSTART=$(($(date +%s%N)/1000000))
+FECHA_CHEQUEO=$(date)
 
 ########################## MAIN
 for nombre_app in $NOMBRES_MALLAS
@@ -59,3 +61,18 @@ do
 		echo "2 CAWA_$nombre_app progreso=$PROGRESO; Error en la ejecucion del comando que chequea la malla -> sh $PATH_EJECUTABLE $HOST $PUERTO $USUARIO $PASSWD 'listapplication application('${nombre_app}') summary(true)' Escalar con... texto customizable"
 	fi
 done
+
+
+########################################
+# Metricas sobre la ejecucion del plugin
+########################################
+TEND=$(($(date +%s%N)/1000000))
+RUNTIME=$((TEND-TSTART))
+RUNTIMEMS=$(echo "scale=3; $RUNTIME/1000" | bc)
+CANTIDAD_MALLAS=$(echo "$NOMBRES_MALLAS" | wc -w)
+#CANTIDAD_TOTAL=$(( CANTIDAD_MALLAS + 2 ))
+CANTIDAD_TOTAL=`expr $CANTIDAD_MALLAS + 2`
+TCHEQUEOMALLA_AVG=$(echo "$RUNTIMEMS $CANTIDAD_TOTAL" | awk '{printf "%.2f", $1/$2}' | sed 's/,/./g')
+
+echo "0 CAWA_plugin_chequeo texec=$RUNTIMEMS;|tcheckmalla=$TCHEQUEOMALLA_AVG;|cantidadmallas=$CANTIDAD_MALLAS; Tiempo de ejecucion del plugin: $RUNTIMEMS segundos. Num de Mallas: $CANTIDAD_TOTAL. Tiempo Promedio Chequeo/Malla $TCHEQUEOMALLA_AVG (seg/malla). Fecha del Chequeo $FECHA_CHEQUEO"
+
